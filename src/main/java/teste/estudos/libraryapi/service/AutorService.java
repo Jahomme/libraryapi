@@ -1,0 +1,66 @@
+package teste.estudos.libraryapi.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import teste.estudos.libraryapi.exceptions.OperacaoNaoPermitidaException;
+import teste.estudos.libraryapi.model.Autor;
+import teste.estudos.libraryapi.repository.AutorRepository;
+import teste.estudos.libraryapi.repository.LivroRepository;
+import teste.estudos.libraryapi.validator.AutorValidator;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class AutorService {
+
+    private final AutorRepository autorRepository;
+    private final AutorValidator autorValidator;
+    private final LivroRepository livroRepository;
+
+    public Autor salvar(Autor  autor) {
+        autorValidator.validar(autor);
+        return autorRepository.save(autor);
+    }
+
+    public void atualizar(Autor  autor) {
+        if(autor.getId() == null) {
+            throw new IllegalArgumentException("Para atualizar, é necessário que o autor já esteja cadastrado!");
+        }
+        autorValidator.validar(autor);
+        autorRepository.save(autor);
+    }
+
+    public Optional<Autor> obterAutorPorId(UUID id) {
+        return autorRepository.findById(id);
+    }
+
+    public void deletarAutor(Autor autor) {
+        if(possuiLivro(autor)) {
+            throw new OperacaoNaoPermitidaException("Não é permitido excluir um autor que possui livros cadastrados!");
+        }
+        autorRepository.delete(autor);
+    }
+
+    public List<Autor> pesquisar(String nome, String nacionalidade) {
+        if(nome != null && nacionalidade != null) {
+            return autorRepository.findByNomeAndNacionalidade(nome, nacionalidade);
+        }
+
+        if(nome != null ) {
+            return autorRepository.findByNome(nome);
+        }
+
+        if(nacionalidade != null) {
+            return autorRepository.findByNacionalidade(nacionalidade);
+        }
+
+        return autorRepository.findAll();
+    }
+
+    public boolean possuiLivro(Autor autor) {
+        return livroRepository.existsByAutor(autor);
+    }
+}
