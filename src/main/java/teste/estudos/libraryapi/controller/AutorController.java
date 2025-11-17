@@ -1,5 +1,6 @@
 package teste.estudos.libraryapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class AutorController {
     private final AutorService autorService;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autorDTO) {
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autorDTO) {
         try {
             Autor autorEntidade = autorDTO.mapearParaAutor();
             autorService.salvar(autorEntidade);
@@ -79,7 +80,7 @@ public class AutorController {
     @GetMapping
     public ResponseEntity<List<DetalhesAutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome,
                                                             @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
-        List<Autor> resultado = autorService.pesquisar(nome, nacionalidade);
+        List<Autor> resultado = autorService.pesquisaByExample(nome, nacionalidade);
         List<DetalhesAutorDTO> lista = resultado
                 .stream()
                 .map(autor -> new DetalhesAutorDTO(
