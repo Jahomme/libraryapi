@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import teste.estudos.libraryapi.model.Autor;
 
 import java.time.LocalDate;
 
@@ -18,12 +17,4 @@ public record AutorDTO(
         @NotBlank(message = "campo obrigatório!")
         @Size(min = 2, max = 50, message = "Campos fora do tamanho padrão!")
         String nacionalidade) {
-
-    public Autor mapearParaAutor() {
-        Autor autor = new Autor();
-        autor.setNome(nome);
-        autor.setDataNascimento(dataNascimento);
-        autor.setNacionalidade(nacionalidade);
-        return autor;
-    }
 }

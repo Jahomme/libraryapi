@@ -30,7 +30,7 @@ class LivroRepositoryTest {
          livro.setTitulo("Game of Thrones");
          livro.setIsbn("1234-5678");
          livro.setPreco(BigDecimal.valueOf(100));
-         livro.setData_publicacao(LocalDate.of(2010, 10, 13));
+         livro.setDataPublicacao(LocalDate.of(2010, 10, 13));
          livro.setGenero(GeneroLivro.FANTASIA);
 
          Autor autor = autorRepository.findById(UUID.fromString("9b41ddd6-7b79-47d3-876b-053af4ee13f8")).orElse(null);

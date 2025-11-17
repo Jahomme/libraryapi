@@ -35,7 +35,7 @@ public class TransacaoService {
         livro.setTitulo("Livro de fulano");
         livro.setIsbn("1414-5113");
         livro.setPreco(BigDecimal.valueOf(200));
-        livro.setData_publicacao(LocalDate.of(2012, 11, 18));
+        livro.setDataPublicacao(LocalDate.of(2012, 11, 18));
         livro.setGenero(GeneroLivro.FICCAO);
         livro.setAutor(autor);
 

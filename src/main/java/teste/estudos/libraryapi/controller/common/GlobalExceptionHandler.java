@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import teste.estudos.libraryapi.controller.dto.ErroCampo;
 import teste.estudos.libraryapi.controller.dto.ErroResposta;
+import teste.estudos.libraryapi.exceptions.OperacaoNaoPermitidaException;
+import teste.estudos.libraryapi.exceptions.RegistroDuplicadoException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,5 +24,23 @@ public class GlobalExceptionHandler {
 
         List<ErroCampo> listaErros = fieldErrors.stream().map(fe -> new ErroCampo(fe.getField(), fe.getDefaultMessage())).collect(Collectors.toList());
         return new ErroResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação", listaErros);
+    }
+
+    @ExceptionHandler(RegistroDuplicadoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErroResposta handleRegistroDuplicadoException(RegistroDuplicadoException e){
+        return ErroResposta.conflito(e.getMessage());
+    }
+
+    @ExceptionHandler(OperacaoNaoPermitidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroResposta handleOperacaoNaoPermitidaException(OperacaoNaoPermitidaException e){
+        return ErroResposta.respostaPadrao(e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErroResposta handleErrosNaoTratados(RuntimeException e){
+        return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Ocorreu um erro inesperado, entre em contato com o suporte.", List.of());
     }
 }

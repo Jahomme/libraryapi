@@ -69,7 +69,7 @@ public class AutorRepositoryTest {
         livro.setTitulo("Interstellar");
         livro.setIsbn("1414-5113");
         livro.setPreco(BigDecimal.valueOf(200));
-        livro.setData_publicacao(LocalDate.of(2012, 11, 18));
+        livro.setDataPublicacao(LocalDate.of(2012, 11, 18));
         livro.setGenero(GeneroLivro.FICCAO);
         livro.setAutor(autor);
 
@@ -77,7 +77,7 @@ public class AutorRepositoryTest {
         livro2.setTitulo("Divergent");
         livro2.setIsbn("1654-5152");
         livro2.setPreco(BigDecimal.valueOf(150));
-        livro2.setData_publicacao(LocalDate.of(2011, 9, 30));
+        livro2.setDataPublicacao(LocalDate.of(2011, 9, 30));
         livro2.setGenero(GeneroLivro.FICCAO);
         livro2.setAutor(autor);
 
