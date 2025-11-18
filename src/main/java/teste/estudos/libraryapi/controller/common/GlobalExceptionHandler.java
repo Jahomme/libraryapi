@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import teste.estudos.libraryapi.controller.dto.ErroCampo;
 import teste.estudos.libraryapi.controller.dto.ErroResposta;
+import teste.estudos.libraryapi.exceptions.CampoInvalidoException;
 import teste.estudos.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import teste.estudos.libraryapi.exceptions.RegistroDuplicadoException;
 
@@ -38,9 +39,22 @@ public class GlobalExceptionHandler {
         return ErroResposta.respostaPadrao(e.getMessage());
     }
 
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroResposta handleCampoInvalidoException(CampoInvalidoException e){
+        return new ErroResposta(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação.",
+                List.of(new ErroCampo(e.getCampo(),e.getMessage()))
+        );
+    }
+
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErroResposta handleErrosNaoTratados(RuntimeException e){
         return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Ocorreu um erro inesperado, entre em contato com o suporte.", List.of());
     }
+
+
 }
