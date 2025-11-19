@@ -1,0 +1,1 @@
+ALTER TABLE usuario ADD COLUMN telefone varchar(20);

@@ -13,6 +13,7 @@ public record UsuarioDTO(
         @NotBlank(message = "campo obrigatório!")
         @Email(message = "inválido")
         String email,
-        List<String> roles
+        List<String> roles,
+        String telefone
         ) {
 }
