@@ -3,6 +3,7 @@ package teste.estudos.libraryapi.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import teste.estudos.libraryapi.controller.dto.AutorDTO;
 import teste.estudos.libraryapi.controller.dto.DetalhesAutorDTO;
@@ -25,11 +26,11 @@ public class AutorController implements GenericController {
     private final AutorMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto) {
 
         Autor autor = mapper.toEntity(dto);
         autorService.salvar(autor);
-
         URI location = gerarHeaderLocation(autor.getId());
 
         return ResponseEntity.created(location).build();
@@ -37,6 +38,7 @@ public class AutorController implements GenericController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<DetalhesAutorDTO> obterDetalhes(@PathVariable String id) {
         UUID idAutor = UUID.fromString(id);
 
@@ -49,6 +51,7 @@ public class AutorController implements GenericController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Object> deletar(@PathVariable String id) {
 
         UUID idAutor = UUID.fromString(id);
@@ -65,6 +68,7 @@ public class AutorController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<List<DetalhesAutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome,
                                                             @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
         List<Autor> resultado = autorService.pesquisaByExample(nome, nacionalidade);
@@ -76,6 +80,7 @@ public class AutorController implements GenericController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     private ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody AutorDTO dto) {
 
 

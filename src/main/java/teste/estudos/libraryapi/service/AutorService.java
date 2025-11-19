@@ -6,8 +6,10 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import teste.estudos.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import teste.estudos.libraryapi.model.Autor;
+import teste.estudos.libraryapi.model.Usuario;
 import teste.estudos.libraryapi.repository.AutorRepository;
 import teste.estudos.libraryapi.repository.LivroRepository;
+import teste.estudos.libraryapi.security.SecurityService;
 import teste.estudos.libraryapi.validator.AutorValidator;
 
 import java.util.List;
@@ -21,9 +23,12 @@ public class AutorService {
     private final AutorRepository autorRepository;
     private final AutorValidator autorValidator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
     public Autor salvar(Autor  autor) {
         autorValidator.validar(autor);
+        Usuario usuarioLogado = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuarioLogado);
         return autorRepository.save(autor);
     }
 

@@ -8,8 +8,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import teste.estudos.libraryapi.model.GeneroLivro;
 import teste.estudos.libraryapi.model.Livro;
+import teste.estudos.libraryapi.model.Usuario;
 import teste.estudos.libraryapi.repository.LivroRepository;
 import teste.estudos.libraryapi.repository.specs.LivroSpecs;
+import teste.estudos.libraryapi.security.SecurityService;
 import teste.estudos.libraryapi.validator.LivroValidator;
 
 import java.time.LocalDate;
@@ -23,9 +25,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro){
         validator.validar(livro);
+        Usuario usuarioLogado = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuarioLogado);
         return repository.save(livro);
     }
 
