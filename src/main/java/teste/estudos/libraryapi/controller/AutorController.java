@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("autores")
 @RequiredArgsConstructor
 @Tag(name = "Autores")
+@Slf4j
 public class AutorController implements GenericController {
 
     private final AutorService autorService;
@@ -40,7 +42,9 @@ public class AutorController implements GenericController {
     })
     public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto) {
 
+
         Autor autor = mapper.toEntity(dto);
+        log.trace("Salvando autor: {}", autor.getNome());
         autorService.salvar(autor);
         URI location = gerarHeaderLocation(autor.getId());
 
@@ -82,6 +86,7 @@ public class AutorController implements GenericController {
         if (autorOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        log.trace("Deletando autor de nome: {} e id: {}", autorOptional.get().getNome(), autorOptional.get().getId());
 
         autorService.deletarAutor(autorOptional.get());
 
@@ -111,7 +116,7 @@ public class AutorController implements GenericController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Autor atualizado com sucesso."),
             @ApiResponse(responseCode = "404", description = "Autor não encontrado."),
-            @ApiResponse(responseCode = "400", description = "Autor já cadastrado.."),
+            @ApiResponse(responseCode = "400", description = "Autor já cadastrado."),
     })
     private ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody AutorDTO dto) {
 
@@ -124,6 +129,7 @@ public class AutorController implements GenericController {
             return ResponseEntity.notFound().build();
         }
 
+        log.trace("Atualizando autor de id: {}", autorOptional.get().getId());
 
         var autor = autorOptional.get();
         autor.setNome(dto.nome());

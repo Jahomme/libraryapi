@@ -2,6 +2,7 @@ package teste.estudos.libraryapi.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("clients")
 @RequiredArgsConstructor
+@Slf4j
 public class ClientController {
 
     private final ClientService service;
@@ -26,6 +28,7 @@ public class ClientController {
     @PreAuthorize("hasRole('GERENTE')")
     public void salvar(@RequestBody @Valid ClientDTO dto){
         Client client = mapper.toEntity(dto);
+        log.trace("Salvando client: {}", client.getClientId());
         service.salvar(client);
 
     }
