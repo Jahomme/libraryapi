@@ -24,3 +24,5 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 1
+springdoc:
+  override-with-generic-response: false
