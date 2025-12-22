@@ -31,22 +31,34 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
     public RegisteredClient findByClientId(String clientId) {
         var client = clientService.obterPorClientId(clientId);
 
-        if(client == null){
+        if (client == null) {
             return null;
         }
 
-        return RegisteredClient
+        // Cria o builder
+        var builder = RegisteredClient
                 .withId(client.getId().toString())
                 .clientId(client.getClientId())
                 .clientSecret(client.getClientSecret())
                 .redirectUri(client.getRedirectURI())
-                .scope(client.getScope())
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .tokenSettings(tokenSettings)
-                .clientSettings(clientSettings)
-                .build();
+                .clientSettings(clientSettings);
+
+
+        String scopes = client.getScope();
+        if (scopes != null) {
+
+            String[] scopeArray = scopes.split("[,\\s]+");
+            for (String scope : scopeArray) {
+                builder.scope(scope);
+            }
+        }
+
+        return builder.build();
     }
 }
