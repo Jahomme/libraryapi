@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfigurationSource;
 import teste.estudos.libraryapi.security.JwtCustomAuthenticationFilter;
 import teste.estudos.libraryapi.security.LoginSocialSuccessHandler;
 
@@ -26,15 +27,24 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             LoginSocialSuccessHandler successHandler,
-            JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception {
+            JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter,
+            CorsConfigurationSource corsConfigurationSource) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .formLogin(configurer -> configurer.loginPage("/login").permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers(HttpMethod.POST,"/usuarios/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET,"/livros/**").permitAll();
                     authorize.anyRequest().authenticated();
                 })
+                .logout(logout -> logout
+                        .logoutSuccessUrl("http://localhost:4200/")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                )
                 .oauth2Login(oauth2 -> {
                     oauth2
                         .loginPage("/login")

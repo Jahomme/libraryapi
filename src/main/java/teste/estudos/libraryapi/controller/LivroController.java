@@ -54,7 +54,7 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
+//    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     @Operation(summary = "Buscar livro", description = "Busca detalhes do livro por ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro encontrado."),
@@ -85,7 +85,7 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
+//    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     @Operation(summary = "Pesquisar", description = "Pesquisa livros com base nos parâmetros.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Sucesso."),
