@@ -33,6 +33,6 @@ public class AutorValidator {
             return optionalAutor.isPresent();
         }
 
-        return !autor.getId().equals(optionalAutor.get().getId()) && optionalAutor.isPresent();
+        return optionalAutor.isPresent() && !autor.getId().equals(optionalAutor.get().getId());
     }
 }

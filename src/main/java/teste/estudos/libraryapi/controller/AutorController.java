@@ -118,7 +118,7 @@ public class AutorController implements GenericController {
             @ApiResponse(responseCode = "404", description = "Autor não encontrado."),
             @ApiResponse(responseCode = "400", description = "Autor já cadastrado."),
     })
-    private ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody AutorDTO dto) {
+    public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody AutorDTO dto) {
 
 
         UUID idAutor = UUID.fromString(id);
